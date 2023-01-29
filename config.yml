@@ -1,0 +1,4 @@
+hostname: "microsoft.com"
+substring: "facebook"
+seconds: 10
+logfile: "errors.log"
