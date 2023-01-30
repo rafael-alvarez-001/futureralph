@@ -5,15 +5,23 @@ import logging
 
 from datetime import datetime
 
+# Global variable for logging
 LOGGER = None
 
 
-def check_txt_record(domain: str, record: str) -> bool:
+def check_txt_record(url: str, substring: str) -> bool:
+    """
+    Takes a url and queries the TXT files for that domain. If the substring is found in the TXT
+    entries it returns True, otherwise it returns false
+    :param url: URL to query
+    :param substring: Substring to look for in TXT entries
+    :return: bool
+    """
     try:
-        answers = dns.resolver.resolve(domain, 'TXT')
+        answers = dns.resolver.resolve(url, 'TXT')
         for rdata in answers:
             for txt_string in rdata.strings:
-                if record in txt_string.decode():
+                if substring in txt_string.decode():
                     return True
         return False
     except Exception as e:
@@ -25,6 +33,12 @@ def check_txt_record(domain: str, record: str) -> bool:
 
 
 def load_variables(cfg: dict) -> (str, str, int):
+    """
+    Loads values for url, substring and time interval to query. If config is empty (or if the
+    value is missing from the config) it will load default values and write to the logfile
+    :param cfg: Dictionary created from default configuration file
+    :return: tuple containing url, substring and time interval
+    """
     # Default values. Will be overwritten if present in "config.yml"
     hostname = "futurestay.com"
     substring = "google-site"
@@ -51,7 +65,13 @@ def load_variables(cfg: dict) -> (str, str, int):
     return (hostname, substring, seconds)
 
 
-def init_logfile(cfg: dict):
+def init_logfile(cfg: dict) -> None:
+    """
+    Initialize logfile. Note - any application can write to the log using
+    the global variable: LOGGER
+    :param cfg: Dictionary containing configuration file settings used to determine
+    name of logfile
+    """
     now = datetime.now()
     dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
 
@@ -77,7 +97,7 @@ def main():
 
     # initialize the global LOGGER variable
     init_logfile(cfg)
-    # initialize
+
     url, substring, seconds = load_variables(cfg)
 
     while True:
