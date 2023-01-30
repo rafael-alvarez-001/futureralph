@@ -80,7 +80,7 @@ def init_logfile(cfg: dict) -> None:
     try:
         logging.basicConfig(filename=logfile, level=logging.DEBUG)
     except Exception as e:
-        print(f" {dt_string} Problem while writing to log file {logfile}")
+        print(f" {dt_string} [ERROR] Problem while writing to log file {logfile}")
 
     global LOGGER
     LOGGER = logging

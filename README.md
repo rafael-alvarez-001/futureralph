@@ -22,7 +22,7 @@ Implement a script/process/service that can:
 ```shell
 > python -m venv venv
 
-> source env/bin/activate
+> source venv/bin/activate
 ```
 3. Install additional required libraries in the virtual environment
 ```shell
