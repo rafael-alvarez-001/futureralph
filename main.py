@@ -20,7 +20,7 @@ def check_txt_record(domain: str, record: str) -> bool:
         now = datetime.now()
         dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
         global LOGGER
-        LOGGER.debug(f"{dt_string} Error: {e}")
+        LOGGER.debug(f" {dt_string} Error: {e}")
         return False
 
 
@@ -30,24 +30,42 @@ def load_variables(cfg: dict) -> (str, str, int):
     substring = "google-site"
     seconds = 5
 
+    now = datetime.now()
+    dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+
     if "hostname" in cfg:
         hostname = cfg["hostname"]
+    else:
+        LOGGER.debug(f" {dt_string} Using default value for hostname")
+
     if "substring" in cfg:
         substring = cfg["substring"]
+    else:
+        LOGGER.debug(f" {dt_string} Using default value for substring")
+
     if "seconds" in cfg:
         seconds = cfg["seconds"]
+    else:
+        LOGGER.debug(f" {dt_string} Using default value for seconds")
 
     return (hostname, substring, seconds)
 
 
 def init_logfile(cfg: dict):
+    now = datetime.now()
+    dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+
     logfile = cfg["logfile"]
-    logging.basicConfig(filename=logfile, level=logging.DEBUG)
+
+    try:
+        logging.basicConfig(filename=logfile, level=logging.DEBUG)
+    except Exception as e:
+        print(f" {dt_string} Problem while writing to log file {logfile}")
 
     global LOGGER
     LOGGER = logging
 
-    # TODO check logfile is writable
+    LOGGER.debug(f" {dt_string} Starting log file ")
 
 
 def main():
